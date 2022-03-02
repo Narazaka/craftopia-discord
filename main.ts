@@ -1,7 +1,7 @@
 import type { DiscordenoUser } from "https://deno.land/x/discordeno@13.0.0-rc15/mod.ts";
 import { createBot, startBot, sendMessage } from "https://deno.land/x/discordeno@13.0.0-rc15/mod.ts";
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.18/mod.ts";
-import { CraftopiaManager } from "./CraftopiaManager.ts";
+import { CraftopiaServerManager } from "./CraftopiaServerManager.ts";
 
 export const config: {
     token: string;
@@ -56,7 +56,7 @@ const bot = enableCachePlugin(baseBot);
 
 enableCacheSweepers(bot);
 
-const manager = new CraftopiaManager(config.serverDirectory);
+const manager = new CraftopiaServerManager(config.serverDirectory);
 
 const usernamesMap: { [name: string]: boolean } = {};
 

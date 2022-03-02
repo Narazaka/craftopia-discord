@@ -2,7 +2,7 @@ import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
 import { execFile } from "https://deno.land/std@0.127.0/node/child_process.ts";
 import { ChildProcess } from "https://deno.land/std@0.127.0/node/internal/child_process.ts";
 
-export class CraftopiaManager {
+export class CraftopiaServerManager {
     serverDirectory: string;
     exe: string;
     process?: ChildProcess;
@@ -90,7 +90,7 @@ export class CraftopiaManager {
             this.state = "running";
             this.onStarted?.();
         } else {
-            const activeSlaveResult = CraftopiaManager.activeSlaveRe.exec(message);
+            const activeSlaveResult = CraftopiaServerManager.activeSlaveRe.exec(message);
             if (activeSlaveResult) {
                 const [, id, active, name] = activeSlaveResult;
                 if (active === "True") {
