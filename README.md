@@ -2,9 +2,9 @@
 
 Craftopia Dedicated Server 用のDiscord無理矢理連携
 
-## build
+## インストール
 
-denoをインストールしてcompile.batを叩くと`craftopia-discord.exe`ができる
+[Release](https://github.com/Narazaka/craftopia-discord/releases/latest)からダウンロードしててきとうなところにおく
 
 ## 使い方
 
@@ -23,6 +23,10 @@ denoをインストールしてcompile.batを叩くと`craftopia-discord.exe`が
     "log": "ログの場所。指定しなければログを書かない。"
 }
 ```
+
+## build
+
+denoをインストールしてcompile.batを叩くと`craftopia-discord.exe`ができる
 
 ## License
 
