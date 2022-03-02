@@ -40,7 +40,6 @@ jobs:
   
       - uses: actions/upload-artifact@v1
         with:
-          path: package
           name: craftopia-discord.zip
 
       - name: Create Release
