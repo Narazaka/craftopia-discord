@@ -1,6 +1,8 @@
 # craftopia-discord
 
-Craftopia Dedicated Server 用のDiscord無理矢理連携
+Craftopia Dedicated Server 用のDiscord無理矢理連携。
+
+今鯖に何人居るかとかをチャンネルに投げたり、起動、停止、設定変更なんかをコマンドで出来るやつ。
 
 ## インストール
 
