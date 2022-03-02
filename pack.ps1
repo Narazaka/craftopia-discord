@@ -1,1 +1,1 @@
-Compress-Archive -Path .\craftopia-discord.exe, .\config.json.example -DestinationPath .\craftopia-discord.zip
+Compress-Archive -Force -Path .\craftopia-discord.exe, .\config.json.example -DestinationPath .\craftopia-discord.zip
