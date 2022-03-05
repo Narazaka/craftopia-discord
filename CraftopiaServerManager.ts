@@ -13,7 +13,7 @@ export class CraftopiaServerManager {
     onLeave?: (params: { id: string; name: string }) => unknown;
     onStart?: () => unknown;
     onStop?: () => unknown;
-    onStarted?: () => unknown;
+    onWorldLoaded?: () => unknown;
     onStopped?: () => unknown;
 
     private closed?: Promise<unknown>;
@@ -88,7 +88,7 @@ export class CraftopiaServerManager {
             this.resolveQuitPrompt = undefined;
         } else if (message.startsWith("World is loaded!")) {
             this.state = "running";
-            this.onStarted?.();
+            this.onWorldLoaded?.();
         } else {
             const activeSlaveResult = CraftopiaServerManager.activeSlaveRe.exec(message);
             if (activeSlaveResult) {
