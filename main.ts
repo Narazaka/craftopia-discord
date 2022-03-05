@@ -148,7 +148,7 @@ manager.onStart = () => {
     craftopiaWorldSaves = undefined;
 };
 
-manager.onWorldLoaded = () => {
+manager.onPreWorldLoaded = () => {
     sendMessage(bot, channelId, manager.state === "running" ? "world loaded" : "server started");
 };
 

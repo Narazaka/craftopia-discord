@@ -13,6 +13,7 @@ export class CraftopiaServerManager {
     onLeave?: (params: { id: string; name: string }) => unknown;
     onStart?: () => unknown;
     onStop?: () => unknown;
+    onPreWorldLoaded?: () => unknown;
     onWorldLoaded?: () => unknown;
     onStopped?: () => unknown;
 
@@ -87,6 +88,7 @@ export class CraftopiaServerManager {
             this.resolveQuitPrompt();
             this.resolveQuitPrompt = undefined;
         } else if (message.startsWith("World is loaded!")) {
+            this.onPreWorldLoaded?.();
             this.state = "running";
             this.onWorldLoaded?.();
         } else {
