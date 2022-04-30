@@ -29,8 +29,8 @@ const baseBot = createBot({
             console.log("ready");
         },
         messageCreate(_bot, message) {
-            if (message.channelId === channelId && message.content.startsWith("//")) {
-                const body = message.content.replace(/^\/\/\s*/, "");
+            if (message.channelId === channelId && message.content.startsWith("!")) {
+                const body = message.content.replace(/^!\s*/, "");
                 if (body === "help") {
                     sendMessage(
                         bot,
