@@ -53,10 +53,7 @@ export class CraftopiaServerManager {
         if (!this.process || !this.canStop) return;
         this.state = "stopping";
         this.onStop?.();
-        const waitPrompt = new Promise<void>((resolve) => (this.resolveQuitPrompt = resolve));
-        await this.sendLine("quit");
-        await waitPrompt;
-        await this.sendLine("yes");
+        await this.sendLine("stop");
         await this.closed;
     }
 
