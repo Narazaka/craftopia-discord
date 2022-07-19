@@ -9,55 +9,55 @@
 name: Build for Windows
 
 on:
-  push:
-    tags:
-      - 'v*'
+    push:
+        tags:
+            - "v*"
 
 jobs:
-  pack:
-    runs-on: windows-latest
+    pack:
+        runs-on: windows-latest
 
-    steps:
-      - name: Setup repo
-        uses: actions/checkout@v2
+        steps:
+            - name: Setup repo
+              uses: actions/checkout@v2
 
-      - name: Setup Deno
-        # uses: denoland/setup-deno@v1
-        uses: denoland/setup-deno@004814556e37c54a2f6e31384c9e18e983317366
-        with:
-          deno-version: v1.x
+            - name: Setup Deno
+              # uses: denoland/setup-deno@v1
+              uses: denoland/setup-deno@004814556e37c54a2f6e31384c9e18e983317366
+              with:
+                  deno-version: v1.23.x
 
-      - name: Compile
-        run: compile.bat
-        shell: cmd
-      
-      - name: pack
-        run: .\pack.ps1
-        shell: pwsh
-  
-      - uses: actions/upload-artifact@v1
-        with:
-          path: craftopia-discord.zip
-          name: craftopia-discord.zip
+            - name: Compile
+              run: compile.bat
+              shell: cmd
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
+            - name: pack
+              run: .\pack.ps1
+              shell: pwsh
 
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: craftopia-discord.zip
-          asset_name: craftopia-discord-${{ github.ref }}.zip
-          asset_content_type: application/zip
+            - uses: actions/upload-artifact@v1
+              with:
+                  path: craftopia-discord.zip
+                  name: craftopia-discord.zip
+
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: ${{ github.ref }}
+                  draft: false
+                  prerelease: false
+
+            - name: Upload Release Asset
+              id: upload-release-asset
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+                  asset_path: craftopia-discord.zip
+                  asset_name: craftopia-discord-${{ github.ref }}.zip
+                  asset_content_type: application/zip
