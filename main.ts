@@ -168,4 +168,10 @@ manager.onMessage = (message) => {
     logFp?.writeSync(textEncoder.encode(new Date().toISOString() + " " + message + "\n"));
 };
 
+sendMessage(bot, channelId, "manager started");
+Deno.addSignalListener("SIGINT", async () => {
+    await sendMessage(bot, channelId, "manager killed");
+    Deno.exit();
+});
+
 await startBot(bot);
