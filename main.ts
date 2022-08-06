@@ -121,8 +121,7 @@ const baseBot = createBot({
                             if (craftopiaServerUpdater) {
                                 sendMessage(bot, message.channelId, "updating...");
                                 craftopiaServerUpdater.updateServer().then(
-                                    (stdout) => {
-                                        console.log(stdout);
+                                    () => {
                                         sendMessage(bot, message.channelId, "update done!");
                                     },
                                     (stderr) => {
