@@ -14,7 +14,7 @@ Craftopia Dedicated Server 用のDiscord無理矢理連携。
 
 2. config.jsonを以下のように設定して`craftopia-discord.exe`を叩く
 
-3. discord側で`//help`コマンドを叩くと色々出来ることがわかる
+3. discord側で`!help`コマンドを叩くと色々出来ることがわかる
 
 ```json
 {
@@ -22,7 +22,8 @@ Craftopia Dedicated Server 用のDiscord無理矢理連携。
     "botId": "DiscordのAPPLICATION ID",
     "serverDirectory": "CraftopiaDedicatedServerのフォルダ",
     "channelId": "Discordの対象チャンネルID（開発者モードでコピー出来るやつ）",
-    "log": "ログの場所。指定しなければログを書かない。"
+    "log": "ログの場所。指定しなければログを書かない。",
+    "steamCmdDirectory": "steamcmd.exeのフォルダ（アップデート用）"
 }
 ```
 
