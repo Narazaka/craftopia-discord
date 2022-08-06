@@ -3,6 +3,7 @@ import { createBot, startBot, sendMessage } from "https://deno.land/x/discordeno
 import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno_cache_plugin@0.0.18/mod.ts";
 import { CraftopiaServerManager } from "./CraftopiaServerManager.ts";
 import { CraftopiaServerSetting } from "./CraftopiaServerSetting.ts";
+import { CraftopiaServerUpdater } from "./CraftopiaServerUpdater.ts";
 import { CraftopiaWorldSaves } from "./CraftopiaWorldSaves.ts";
 
 export const config: {
@@ -11,6 +12,7 @@ export const config: {
     serverDirectory: string;
     channelId: string;
     log?: string;
+    steamCmdDirectory?: string;
 } = JSON.parse(new TextDecoder("utf8").decode(Deno.readFileSync("config.json")));
 
 const channelId = BigInt(config.channelId);
@@ -44,56 +46,69 @@ const baseBot = createBot({
                             ...CraftopiaServerSetting.enumKeys.map(
                                 (key) => `set ${key} [${CraftopiaServerSetting.possibleEnumValues(key).join("|")}]`,
                             ),
+                            "update-server",
                         ].join("\n"),
                     );
-                } else if (body === "start") {
-                    if (manager.canStart) {
-                        manager.start();
-                    } else {
-                        sendMessage(bot, message.channelId, `Cannot start! Server is ${manager.state}`);
-                    }
-                } else if (body === "restart") {
-                    if (manager.canRestart) {
-                        manager.restart();
-                    } else {
-                        sendMessage(bot, message.channelId, `Cannot restart! Server is ${manager.state}`);
-                    }
-                } else if (body === "stop") {
-                    if (manager.canStop) {
-                        manager.stop();
-                    } else {
-                        sendMessage(bot, message.channelId, `Cannot stop! Server is ${manager.state}`);
-                    }
-                } else if (body === "info") {
-                    const setting = craftopiaServerSetting.read();
-                    const str = [
-                        `ワールド名: ${setting.name}`,
-                        `難易度: ${CraftopiaServerSetting.getEnumValue("difficulty", Number(setting.difficulty))}`,
-                        `モード: ${CraftopiaServerSetting.getEnumValue("gameMode", Number(setting.gameMode))}`,
-                        `最大プレイ人数: ${setting.maxPlayerNumber}`,
-                    ].join("\n");
+                } else if (craftopiaServerUpdater?.updating) {
+                    sendMessage(bot, message.channelId, "command is not available because updating...");
+                } else {
+                    if (body === "start") {
+                        if (manager.canStart) {
+                            manager.start();
+                        } else {
+                            sendMessage(bot, message.channelId, `Cannot start! Server is ${manager.state}`);
+                        }
+                    } else if (body === "restart") {
+                        if (manager.canRestart) {
+                            manager.restart();
+                        } else {
+                            sendMessage(bot, message.channelId, `Cannot restart! Server is ${manager.state}`);
+                        }
+                    } else if (body === "stop") {
+                        if (manager.canStop) {
+                            manager.stop();
+                        } else {
+                            sendMessage(bot, message.channelId, `Cannot stop! Server is ${manager.state}`);
+                        }
+                    } else if (body === "info") {
+                        const setting = craftopiaServerSetting.read();
+                        const str = [
+                            `ワールド名: ${setting.name}`,
+                            `難易度: ${CraftopiaServerSetting.getEnumValue("difficulty", Number(setting.difficulty))}`,
+                            `モード: ${CraftopiaServerSetting.getEnumValue("gameMode", Number(setting.gameMode))}`,
+                            `最大プレイ人数: ${setting.maxPlayerNumber}`,
+                        ].join("\n");
 
-                    sendMessage(bot, message.channelId, str);
-                } else if (body === "worlds") {
-                    if (!craftopiaWorldSaves) craftopiaWorldSaves = new CraftopiaWorldSaves(config.serverDirectory);
-                    const names = craftopiaWorldSaves.worldSaves().map((w) => w.fetchSaveData().WorldSave.value.name);
-                    sendMessage(bot, message.channelId, `${names.length} worlds: ${names.join(", ")}`);
-                } else if (body.startsWith("set")) {
-                    const matched = body.match(/^set\s+(\S+)\s+(\w+)$/);
-                    if (matched) {
-                        const [, key, value] = matched;
-                        if (CraftopiaServerSetting.canSetEnum(key, value)) {
-                            craftopiaServerSetting.setEnum(key, value);
-                            sendMessage(bot, message.channelId, `${key} set to ${value}`);
-                            if (manager.state !== "idle") {
-                                sendMessage(bot, message.channelId, "サーバー再起動しないと反映されません");
+                        sendMessage(bot, message.channelId, str);
+                    } else if (body === "worlds") {
+                        if (!craftopiaWorldSaves) craftopiaWorldSaves = new CraftopiaWorldSaves(config.serverDirectory);
+                        const names = craftopiaWorldSaves
+                            .worldSaves()
+                            .map((w) => w.fetchSaveData().WorldSave.value.name);
+                        sendMessage(bot, message.channelId, `${names.length} worlds: ${names.join(", ")}`);
+                    } else if (body.startsWith("set")) {
+                        const matched = body.match(/^set\s+(\S+)\s+(\w+)$/);
+                        if (matched) {
+                            const [, key, value] = matched;
+                            if (CraftopiaServerSetting.canSetEnum(key, value)) {
+                                craftopiaServerSetting.setEnum(key, value);
+                                sendMessage(bot, message.channelId, `${key} set to ${value}`);
+                                if (manager.state !== "idle") {
+                                    sendMessage(bot, message.channelId, "サーバー再起動しないと反映されません");
+                                }
+                            } else if (CraftopiaServerSetting.isEnumKey(key)) {
+                                sendMessage(
+                                    bot,
+                                    message.channelId,
+                                    `! set ${key} [${CraftopiaServerSetting.possibleEnumValues(key).join("|")}]`,
+                                );
+                            } else {
+                                sendMessage(
+                                    bot,
+                                    message.channelId,
+                                    `! set [${CraftopiaServerSetting.enumKeys.join("|")}] <value>`,
+                                );
                             }
-                        } else if (CraftopiaServerSetting.isEnumKey(key)) {
-                            sendMessage(
-                                bot,
-                                message.channelId,
-                                `! set ${key} [${CraftopiaServerSetting.possibleEnumValues(key).join("|")}]`,
-                            );
                         } else {
                             sendMessage(
                                 bot,
@@ -101,12 +116,30 @@ const baseBot = createBot({
                                 `! set [${CraftopiaServerSetting.enumKeys.join("|")}] <value>`,
                             );
                         }
-                    } else {
-                        sendMessage(
-                            bot,
-                            message.channelId,
-                            `! set [${CraftopiaServerSetting.enumKeys.join("|")}] <value>`,
-                        );
+                    } else if (body === "update-server") {
+                        if (manager.canStart) {
+                            if (craftopiaServerUpdater) {
+                                sendMessage(bot, message.channelId, "updating...");
+                                craftopiaServerUpdater.updateServer().then(
+                                    (stdout) => {
+                                        console.log(stdout);
+                                        sendMessage(bot, message.channelId, "update done!");
+                                    },
+                                    (stderr) => {
+                                        sendMessage(bot, message.channelId, "update failed!");
+                                        sendMessage(bot, message.channelId, stderr);
+                                    },
+                                );
+                            } else {
+                                sendMessage(
+                                    bot,
+                                    message.channelId,
+                                    "update-server is not enabled! steamCmdDirectory is not set",
+                                );
+                            }
+                        } else {
+                            sendMessage(bot, message.channelId, `Cannot update server! Server is ${manager.state}`);
+                        }
                     }
                 }
             }
@@ -169,9 +202,19 @@ manager.onMessage = (message) => {
 };
 
 sendMessage(bot, channelId, "manager started");
-Deno.addSignalListener("SIGINT", async () => {
-    await sendMessage(bot, channelId, "manager killed");
-    Deno.exit();
-});
+globalThis.onunload = () => {
+    sendMessage(bot, channelId, "manager killed");
+};
+
+const craftopiaServerUpdater = config.steamCmdDirectory
+    ? new CraftopiaServerUpdater(config.serverDirectory, config.steamCmdDirectory)
+    : undefined;
+
+if (craftopiaServerUpdater) {
+    craftopiaServerUpdater.onMessage = (message) => {
+        console.log(message);
+        logFp?.writeSync(textEncoder.encode(new Date().toISOString() + " " + message + "\n"));
+    };
+}
 
 await startBot(bot);
