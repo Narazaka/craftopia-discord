@@ -85,7 +85,7 @@ export class CraftopiaServerManager {
         if (this.resolveQuitPrompt && message.startsWith("type 'yes' to quit")) {
             this.resolveQuitPrompt();
             this.resolveQuitPrompt = undefined;
-        } else if (message.startsWith("World is loaded!")) {
+        } else if (message.startsWith("Total: ")) {
             this.onPreWorldLoaded?.();
             this.state = "running";
             this.onWorldLoaded?.();
