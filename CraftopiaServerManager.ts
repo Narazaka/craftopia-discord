@@ -85,7 +85,7 @@ export class CraftopiaServerManager {
         if (this.resolveQuitPrompt && message.startsWith("type 'yes' to quit")) {
             this.resolveQuitPrompt();
             this.resolveQuitPrompt = undefined;
-        } else if (message.startsWith("Total: ")) {
+        } else if (/Unloading \d+ unused Assets to reduce memory usage. Loaded Objects now:/.test(message)) {
             this.onPreWorldLoaded?.();
             this.state = "running";
             this.onWorldLoaded?.();
