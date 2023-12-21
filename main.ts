@@ -168,7 +168,7 @@ const bot = createBot({
                                         sendMessage(bot, message.channelId, {
                                             content: "update failed!",
                                         });
-                                        sendMessage(bot, message.channelId, stderr);
+                                        sendMessage(bot, message.channelId, {content: `ERROR:\n${stderr}`});
                                     },
                                 );
                             } else {
