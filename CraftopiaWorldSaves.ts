@@ -1,4 +1,4 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
+import { path } from "./deps.ts";
 import { CraftopiaWorldSaveDataHandler } from "./CraftopiaWorldSaveDataHandler.ts";
 
 export class CraftopiaWorldSaves {

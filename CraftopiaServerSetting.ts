@@ -1,4 +1,4 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
+import { path } from "./deps.ts";
 
 export type EnumValues = typeof CraftopiaServerSetting.enumValuesMap;
 export type EnumValue<T extends EnumKey> = keyof EnumValues[T];

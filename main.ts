@@ -1,8 +1,9 @@
-import { createBot, GatewayIntents, sendMessage, startBot } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
+import { createBot, GatewayIntents, sendMessage, startBot } from "./deps.ts";
 import { CraftopiaServerManager } from "./CraftopiaServerManager.ts";
 import { CraftopiaServerSetting } from "./CraftopiaServerSetting.ts";
 import { CraftopiaServerUpdater } from "./CraftopiaServerUpdater.ts";
 import { CraftopiaWorldSaves } from "./CraftopiaWorldSaves.ts";
+import { colored } from "./colored.ts";
 
 export const config: {
     token: string;
@@ -32,6 +33,7 @@ const bot = createBot({
         },
         messageCreate(_bot, message) {
             if (message.channelId === channelId && message.content.startsWith("!")) {
+                console.log(colored(`> ${message.content}`));
                 const body = message.content.replace(/^!\s*/, "");
                 if (body === "help") {
                     sendMessage(
@@ -247,7 +249,7 @@ const logFp = config.log ? await Deno.open(config.log, { create: true, append: t
 const textEncoder = new TextEncoder();
 
 manager.onMessage = (message) => {
-    console.log(message);
+    console.log(colored(message));
     logFp?.writeSync(
         textEncoder.encode(new Date().toISOString() + " " + message + "\n"),
     );

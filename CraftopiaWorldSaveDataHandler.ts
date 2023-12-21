@@ -1,4 +1,4 @@
-import { gzipDecode } from "https://deno.land/x/wasm_gzip@v1.0.0/mod.ts";
+import { gzipDecode } from "./deps.ts";
 import { CraftopiaWorldSaveData } from "./CraftopiaWorldSaveData.ts";
 export class CraftopiaWorldSaveDataHandler {
     static unpackWorldSaveDataFromPath(path: string) {

@@ -1,6 +1,4 @@
-import * as path from "https://deno.land/std@0.127.0/path/mod.ts";
-import { execFile } from "https://deno.land/std@0.127.0/node/child_process.ts";
-import { ChildProcess } from "https://deno.land/std@0.127.0/node/internal/child_process.ts";
+import { ChildProcess, execFile, path } from "./deps.ts";
 
 export class CraftopiaServerManager {
     serverDirectory: string;
