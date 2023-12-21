@@ -30,7 +30,9 @@ export class CraftopiaWorldSaveDataHandler {
 
     fetchSaveData() {
         if (!this.saveData) {
-            this.saveData = CraftopiaWorldSaveDataHandler.unpackWorldSaveData(this.fetchData());
+            this.saveData = CraftopiaWorldSaveDataHandler.unpackWorldSaveData(
+                this.fetchData(),
+            );
         }
         return this.saveData;
     }

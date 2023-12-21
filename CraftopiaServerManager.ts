@@ -73,7 +73,10 @@ export class CraftopiaServerManager {
     async sendString(str: string) {
         if (!this.process) return;
         await new Promise<void>((resolve, reject) =>
-            this.process!.stdin?.write(str, (error) => (error ? reject(error) : resolve())),
+            this.process!.stdin?.write(
+                str,
+                (error) => (error ? reject(error) : resolve()),
+            )
         );
     }
 
@@ -89,7 +92,9 @@ export class CraftopiaServerManager {
             this.state = "running";
             this.onWorldLoaded?.();
         } else {
-            const activeSlaveResult = CraftopiaServerManager.activeSlaveRe.exec(message);
+            const activeSlaveResult = CraftopiaServerManager.activeSlaveRe.exec(
+                message,
+            );
             if (activeSlaveResult) {
                 const [, id, active, name] = activeSlaveResult;
                 if (active === "True") {

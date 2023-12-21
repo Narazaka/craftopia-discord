@@ -7,7 +7,10 @@ export class CraftopiaWorldSaves {
 
     constructor(serverDirectory: string) {
         this.serverDirectory = serverDirectory;
-        this.worldsDirectory = path.join(this.serverDirectory, "DedicatedServerSave/Worlds");
+        this.worldsDirectory = path.join(
+            this.serverDirectory,
+            "DedicatedServerSave/Worlds",
+        );
     }
 
     worldSaves() {

@@ -22,7 +22,9 @@ export class CraftopiaServerSetting {
         },
     } as const;
 
-    static enumKeys = Object.keys(CraftopiaServerSetting.enumValuesMap) as EnumKey[];
+    static enumKeys = Object.keys(
+        CraftopiaServerSetting.enumValuesMap,
+    ) as EnumKey[];
 
     constructor(serverDirectory: string) {
         this.serverDirectory = serverDirectory;
@@ -30,7 +32,9 @@ export class CraftopiaServerSetting {
     }
 
     read() {
-        const data = new TextDecoder().decode(Deno.readFileSync(this.serverSetting));
+        const data = new TextDecoder().decode(
+            Deno.readFileSync(this.serverSetting),
+        );
         const lines = data.split("\n");
         const result: { [key: string]: string } = {};
         for (const line of lines) {
@@ -45,11 +49,18 @@ export class CraftopiaServerSetting {
     static possibleEnumValues<K extends EnumKey>(key: K): EnumValue<K>[];
     static possibleEnumValues(key: string): EnumValue<EnumKey>[];
     static possibleEnumValues(key: string) {
-        return Object.keys(CraftopiaServerSetting.enumValuesMap[key as EnumKey]) || [];
+        return Object.keys(CraftopiaServerSetting.enumValuesMap[key as EnumKey]) ||
+            [];
     }
 
-    static getEnumValue<K extends EnumKey>(key: K, value: number): EnumValue<K> | undefined;
-    static getEnumValue(key: string, value: number): EnumValue<EnumKey> | undefined;
+    static getEnumValue<K extends EnumKey>(
+        key: K,
+        value: number,
+    ): EnumValue<K> | undefined;
+    static getEnumValue(
+        key: string,
+        value: number,
+    ): EnumValue<EnumKey> | undefined;
     static getEnumValue(key: string, value: number) {
         const values = (CraftopiaServerSetting.enumValuesMap as any)[key];
         if (values) {
@@ -69,7 +80,10 @@ export class CraftopiaServerSetting {
     setEnum(key: string, value: string): void;
     setEnum(key: string, value: string) {
         if (CraftopiaServerSetting.canSetEnum(key, value)) {
-            this.write("difficulty", (CraftopiaServerSetting.enumValuesMap as any)[key][value].toString());
+            this.write(
+                "difficulty",
+                (CraftopiaServerSetting.enumValuesMap as any)[key][value].toString(),
+            );
         }
     }
 
@@ -78,8 +92,13 @@ export class CraftopiaServerSetting {
     }
 
     write(key: string, value: string) {
-        const data = new TextDecoder().decode(Deno.readFileSync(this.serverSetting));
-        const newData = data.replace(new RegExp(`^${key}=.*$`, "m"), `${key}=${value}`);
+        const data = new TextDecoder().decode(
+            Deno.readFileSync(this.serverSetting),
+        );
+        const newData = data.replace(
+            new RegExp(`^${key}=.*$`, "m"),
+            `${key}=${value}`,
+        );
         Deno.writeFileSync(this.serverSetting, new TextEncoder().encode(newData));
     }
 }
