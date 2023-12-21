@@ -1,4 +1,4 @@
-import { createBot, sendMessage, startBot, GatewayIntents } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
+import { createBot, GatewayIntents, sendMessage, startBot } from "https://deno.land/x/discordeno@18.0.0/mod.ts";
 import { CraftopiaServerManager } from "./CraftopiaServerManager.ts";
 import { CraftopiaServerSetting } from "./CraftopiaServerSetting.ts";
 import { CraftopiaServerUpdater } from "./CraftopiaServerUpdater.ts";
@@ -81,25 +81,30 @@ const bot = createBot({
                             });
                         }
                     } else if (body === "info") {
-                        const setting = craftopiaServerSetting.read();
-                        const str = [
-                            `ワールド名: ${setting.name}`,
-                            `難易度: ${
-                                CraftopiaServerSetting.getEnumValue(
-                                    "difficulty",
-                                    Number(setting.difficulty),
-                                )
-                            }`,
-                            `モード: ${
-                                CraftopiaServerSetting.getEnumValue(
-                                    "gameMode",
-                                    Number(setting.gameMode),
-                                )
-                            }`,
-                            `最大プレイ人数: ${setting.maxPlayerNumber}`,
-                        ].join("\n");
+                        try {
+                            const setting = craftopiaServerSetting.read();
+                            const str = [
+                                `ワールド名: ${setting.name}`,
+                                `難易度: ${
+                                    CraftopiaServerSetting.getEnumValue(
+                                        "difficulty",
+                                        Number(setting.difficulty),
+                                    )
+                                }`,
+                                `モード: ${
+                                    CraftopiaServerSetting.getEnumValue(
+                                        "gameMode",
+                                        Number(setting.gameMode),
+                                    )
+                                }`,
+                                `最大プレイ人数: ${setting.maxPlayerNumber}`,
+                            ].join("\n");
 
-                        sendMessage(bot, message.channelId, { content: str });
+                            sendMessage(bot, message.channelId, { content: str });
+                        } catch (_e) {
+                            sendMessage(bot, message.channelId, { content: "error" });
+                            return;
+                        }
                     } else if (body === "worlds") {
                         if (!craftopiaWorldSaves) {
                             craftopiaWorldSaves = new CraftopiaWorldSaves(
@@ -168,7 +173,7 @@ const bot = createBot({
                                         sendMessage(bot, message.channelId, {
                                             content: "update failed!",
                                         });
-                                        sendMessage(bot, message.channelId, {content: `ERROR:\n${stderr}`});
+                                        sendMessage(bot, message.channelId, { content: `ERROR:\n${stderr}` });
                                     },
                                 );
                             } else {
