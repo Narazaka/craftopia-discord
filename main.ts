@@ -12,6 +12,7 @@ export const config: {
     channelId: string;
     log?: string;
     steamCmdDirectory?: string;
+    autoStart?: boolean;
 } = JSON.parse(
     new TextDecoder("utf8").decode(Deno.readFileSync("config.json")),
 );
@@ -30,6 +31,9 @@ const bot = createBot({
     events: {
         ready(_bot) {
             console.log("ready");
+            if (config.autoStart && manager.canStart) {
+                manager.start();
+            }
         },
         messageCreate(_bot, message) {
             if (message.channelId === channelId && message.content.startsWith("!")) {

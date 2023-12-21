@@ -23,7 +23,8 @@ Craftopia Dedicated Server 用のDiscord無理矢理連携。
     "serverDirectory": "CraftopiaDedicatedServerのフォルダ",
     "channelId": "Discordの対象チャンネルID（開発者モードでコピー出来るやつ）",
     "log": "ログの場所。指定しなければログを書かない。",
-    "steamCmdDirectory": "steamcmd.exeのフォルダ（アップデート用）"
+    "steamCmdDirectory": "steamcmd.exeのフォルダ（アップデート用）",
+    "autoStart": false
 }
 ```
 
